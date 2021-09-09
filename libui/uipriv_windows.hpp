@@ -19,8 +19,8 @@ enum {
 };
 
 // alloc.cpp
-extern void initAlloc(void);
-extern void uninitAlloc(void);
+extern void init_Alloc(void);
+extern void uninit_Alloc(void);
 
 // events.cpp
 extern BOOL runWM_COMMAND(WPARAM wParam, LPARAM lParam, LRESULT *lResult);
@@ -29,8 +29,8 @@ extern BOOL runWM_HSCROLL(WPARAM wParam, LPARAM lParam, LRESULT *lResult);
 extern void issueWM_WININICHANGE(WPARAM wParam, LPARAM lParam);
 
 // utf16.cpp
-#define emptyUTF16() ((WCHAR *) uiprivAlloc(1 * sizeof (WCHAR), "WCHAR[]"))
-#define emptyUTF8() ((char *) uiprivAlloc(1 * sizeof (char), "char[]"))
+#define emptyUTF16() ((WCHAR *) libui_alloc(1 * sizeof (WCHAR), "WCHAR[]"))
+#define emptyUTF8() ((char *) libui_alloc(1 * sizeof (char), "char[]"))
 extern WCHAR *toUTF16(const char *str);
 extern char *toUTF8(const WCHAR *wstr);
 extern WCHAR *utf16dup(const WCHAR *orig);

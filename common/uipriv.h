@@ -13,10 +13,10 @@ extern "C" {
 extern uiInitOptions uiprivOptions;
 
 // OS-specific alloc.* files
-extern void *uiprivAlloc(size_t, const char *);
-#define uiprivNew(T) ((T *) uiprivAlloc(sizeof (T), #T))
-extern void *uiprivRealloc(void *, size_t, const char *);
-extern void uiprivFree(void *);
+extern void *libui_alloc(size_t, const char *);
+#define libui_new_t(T) ((T *) libui_alloc(sizeof (T), #T))
+extern void *libui_realloc(void *, size_t, const char *);
+extern void libui_free(void *);
 
 // debug.c and OS-specific debug.* files
 // TODO get rid of this mess...

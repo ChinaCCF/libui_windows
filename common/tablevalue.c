@@ -22,7 +22,7 @@ static uiTableValue *newTableValue(uiTableValueType type)
 {
 	uiTableValue *v;
 
-	v = uiprivNew(uiTableValue);
+	v = libui_new_t(uiTableValue);
 	v->type = type;
 	return v;
 }
@@ -31,10 +31,10 @@ void uiFreeTableValue(uiTableValue *v)
 {
 	switch (v->type) {
 	case uiTableValueTypeString:
-		uiprivFree(v->u.str);
+		libui_free(v->u.str);
 		break;
 	}
-	uiprivFree(v);
+	libui_free(v);
 }
 
 uiTableValueType uiTableValueGetType(const uiTableValue *v)
@@ -47,7 +47,7 @@ uiTableValue *uiNewTableValueString(const char *str)
 	uiTableValue *v;
 
 	v = newTableValue(uiTableValueTypeString);
-	v->u.str = (char *) uiprivAlloc((strlen(str) + 1) * sizeof (char), "char[] (uiTableValue)");
+	v->u.str = (char *) libui_alloc((strlen(str) + 1) * sizeof (char), "char[] (uiTableValue)");
 	strcpy(v->u.str, str);
 	return v;
 }

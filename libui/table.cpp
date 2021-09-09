@@ -12,7 +12,7 @@ uiTableModel *uiNewTableModel(uiTableModelHandler *mh)
 {
 	uiTableModel *m;
 
-	m = uiprivNew(uiTableModel);
+	m = libui_new_t(uiTableModel);
 	m->mh = mh;
 	m->tables = new std::vector<uiTable *>;
 	return m;
@@ -21,7 +21,7 @@ uiTableModel *uiNewTableModel(uiTableModelHandler *mh)
 void uiFreeTableModel(uiTableModel *m)
 {
 	delete m->tables;
-	uiprivFree(m);
+	libui_free(m);
 }
 
 // TODO document that when this is called, the model must return the new row count when asked
@@ -346,7 +346,7 @@ static void uiTableDestroy(uiControl *c)
 	}
 	// free the columns
 	for (auto col : *(t->columns))
-		uiprivFree(col);
+		libui_free(col);
 	delete t->columns;
 	// t->imagelist will be automatically destroyed
 	delete t->indeterminatePositions;
@@ -392,10 +392,10 @@ static uiprivTableColumnParams *appendColumn(uiTable *t, const char *name, int c
 	lvc.pszText = wstr;
 	if (SendMessageW(t->hwnd, LVM_INSERTCOLUMNW, t->nColumns, (LPARAM) (&lvc)) == (LRESULT) (-1))
 		logLastError(L"error calling LVM_INSERTCOLUMNW in appendColumn()");
-	uiprivFree(wstr);
+	libui_free(wstr);
 	t->nColumns++;
 
-	p = uiprivNew(uiprivTableColumnParams);
+	p = libui_new_t(uiprivTableColumnParams);
 	p->textModelColumn = -1;
 	p->textEditableModelColumn = -1;
 	p->textParams = uiprivDefaultTextColumnOptionalParams;

@@ -24,18 +24,18 @@ struct uiAttributedString {
 static void resize(uiAttributedString *s, size_t u8, size_t u16)
 {
 	s->len = u8;
-	s->s = (char *) uiprivRealloc(s->s, (s->len + 1) * sizeof (char), "char[] (uiAttributedString)");
-	s->u8tou16 = (size_t *) uiprivRealloc(s->u8tou16, (s->len + 1) * sizeof (size_t), "size_t[] (uiAttributedString)");
+	s->s = (char *) libui_realloc(s->s, (s->len + 1) * sizeof (char), "char[] (uiAttributedString)");
+	s->u8tou16 = (size_t *) libui_realloc(s->u8tou16, (s->len + 1) * sizeof (size_t), "size_t[] (uiAttributedString)");
 	s->u16len = u16;
-	s->u16 = (uint16_t *) uiprivRealloc(s->u16, (s->u16len + 1) * sizeof (uint16_t), "uint16_t[] (uiAttributedString)");
-	s->u16tou8 = (size_t *) uiprivRealloc(s->u16tou8, (s->u16len + 1) * sizeof (size_t), "size_t[] (uiAttributedString)");
+	s->u16 = (uint16_t *) libui_realloc(s->u16, (s->u16len + 1) * sizeof (uint16_t), "uint16_t[] (uiAttributedString)");
+	s->u16tou8 = (size_t *) libui_realloc(s->u16tou8, (s->u16len + 1) * sizeof (size_t), "size_t[] (uiAttributedString)");
 }
 
 uiAttributedString *uiNewAttributedString(const char *initialString)
 {
 	uiAttributedString *s;
 
-	s = uiprivNew(uiAttributedString);
+	s = libui_new_t(uiAttributedString);
 	s->attrs = uiprivNewAttrList();
 	uiAttributedStringAppendUnattributed(s, initialString);
 	return s;
@@ -57,9 +57,9 @@ static void invalidateGraphemes(uiAttributedString *s)
 {
 	if (s->graphemes == NULL)
 		return;
-	uiprivFree(s->graphemes->pointsToGraphemes);
-	uiprivFree(s->graphemes->graphemesToPoints);
-	uiprivFree(s->graphemes);
+	libui_free(s->graphemes->pointsToGraphemes);
+	libui_free(s->graphemes->graphemesToPoints);
+	libui_free(s->graphemes);
 	s->graphemes = NULL;
 }
 
@@ -67,11 +67,11 @@ void uiFreeAttributedString(uiAttributedString *s)
 {
 	uiprivFreeAttrList(s->attrs);
 	invalidateGraphemes(s);
-	uiprivFree(s->u16tou8);
-	uiprivFree(s->u8tou16);
-	uiprivFree(s->u16);
-	uiprivFree(s->s);
-	uiprivFree(s);
+	libui_free(s->u16tou8);
+	libui_free(s->u8tou16);
+	libui_free(s->u16);
+	libui_free(s->s);
+	libui_free(s);
 }
 
 const char *uiAttributedStringString(const uiAttributedString *s)
@@ -339,7 +339,7 @@ size_t *uiprivAttributedStringCopyUTF8ToUTF16Table(const uiAttributedString *s, 
 
 	nbytes = (s->len + 1) * sizeof (size_t);
 	*n = s->len;
-	out = (size_t *) uiprivAlloc(nbytes, "size_t[] (uiAttributedString)");
+	out = (size_t *) libui_alloc(nbytes, "size_t[] (uiAttributedString)");
 	memmove(out, s->u8tou16, nbytes);
 	return out;
 }
@@ -351,7 +351,7 @@ size_t *uiprivAttributedStringCopyUTF16ToUTF8Table(const uiAttributedString *s, 
 
 	nbytes = (s->u16len + 1) * sizeof (size_t);
 	*n = s->u16len;
-	out = (size_t *) uiprivAlloc(nbytes, "size_t[] (uiAttributedString)");
+	out = (size_t *) libui_alloc(nbytes, "size_t[] (uiAttributedString)");
 	memmove(out, s->u16tou8, nbytes);
 	return out;
 }

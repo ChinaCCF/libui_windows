@@ -30,7 +30,7 @@ static uiAttribute *newAttribute(uiAttributeType type)
 {
 	uiAttribute *a;
 
-	a = uiprivNew(uiAttribute);
+	a = libui_new_t(uiAttribute);
 	a->ownedByUser = 1;
 	a->refcount = 0;
 	a->type = type;
@@ -50,13 +50,13 @@ static void destroy(uiAttribute *a)
 {
 	switch (a->type) {
 	case uiAttributeTypeFamily:
-		uiprivFree(a->u.family);
+		libui_free(a->u.family);
 		break;
 	case uiAttributeTypeFeatures:
 		uiFreeOpenTypeFeatures(a->u.features);
 		break;
 	}
-	uiprivFree(a);
+	libui_free(a);
 }
 
 void uiprivAttributeRelease(uiAttribute *a)
@@ -85,7 +85,7 @@ uiAttribute *uiNewFamilyAttribute(const char *family)
 	uiAttribute *a;
 
 	a = newAttribute(uiAttributeTypeFamily);
-	a->u.family = (char *) uiprivAlloc((strlen(family) + 1) * sizeof (char), "char[] (uiAttribute)");
+	a->u.family = (char *) libui_alloc((strlen(family) + 1) * sizeof (char), "char[] (uiAttribute)");
 	strcpy(a->u.family, family);
 	return a;
 }

@@ -21,7 +21,7 @@ static HRESULT resizeEdit(uiTable *t, WCHAR *wstr, int iItem, int iSubItem)
 	if (hr != S_OK)
 		return hr;
 	r = m->realTextRect;
-	uiprivFree(m);
+	libui_free(m);
 
 	// TODO check errors for all these
 	dc = GetDC(t->hwnd);		// use the list view DC since we're using its coordinate space
@@ -119,7 +119,7 @@ static HRESULT openEditControl(uiTable *t, int iItem, int iSubItem, uiprivTableC
 		t->hwnd, (HMENU) 1, hInstance, NULL);
 	if (t->edit == NULL) {
 		logLastError(L"CreateWindowExW()");
-		uiprivFree(wstr);
+		libui_free(wstr);
 		return E_FAIL;
 	}
 	SendMessageW(t->edit, WM_SETFONT, (WPARAM) hMessageFont, (LPARAM) TRUE);
@@ -135,7 +135,7 @@ static HRESULT openEditControl(uiTable *t, int iItem, int iSubItem, uiprivTableC
 	ShowWindow(t->edit, SW_SHOW);
 	SendMessageW(t->edit, EM_SETSEL, 0, (LPARAM) (-1));
 
-	uiprivFree(wstr);
+	libui_free(wstr);
 	t->editedItem = iItem;
 	t->editedSubitem = iSubItem;
 	return S_OK;
@@ -150,7 +150,7 @@ HRESULT uiprivTableResizeWhileEditing(uiTable *t)
 		return S_OK;
 	text = windowText(t->edit);
 	hr = resizeEdit(t, text, t->editedItem, t->editedSubitem);
-	uiprivFree(text);
+	libui_free(text);
 	return hr;
 }
 

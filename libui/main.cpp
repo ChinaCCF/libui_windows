@@ -135,7 +135,7 @@ void uiTimer(int milliseconds, int (*f)(void *data), void *data)
 {
 	uiprivTimer *timer;
 
-	timer = uiprivNew(uiprivTimer);
+	timer = libui_new_t(uiprivTimer);
 	timer->f = f;
 	timer->data = data;
 	// note that timer IDs are pointer sized precisely so we can use them as timer IDs; see https://blogs.msdn.microsoft.com/oldnewthing/20150924-00/?p=91521
@@ -147,7 +147,7 @@ void uiTimer(int milliseconds, int (*f)(void *data), void *data)
 void uiprivFreeTimer(uiprivTimer *t)
 {
 	timers.erase(t);
-	uiprivFree(t);
+	libui_free(t);
 }
 
 // since timers use uiprivAlloc(), we have to clean them up in uiUninit(), or else we'll get dangling allocation errors
@@ -155,6 +155,6 @@ void uiprivUninitTimers(void)
 {
 	// TODO why doesn't auto t : timers work?
 	for (auto t = timers.begin(); t != timers.end(); t++)
-		uiprivFree(t->first);
+		libui_free(t->first);
 	timers.clear();
 }

@@ -27,7 +27,7 @@ static void updateFontButtonLabel(uiFontButton *b)
 
 	text = uiprivFontDialogParamsToString(&(b->params));
 	setWindowText(b->hwnd, text);
-	uiprivFree(text);
+	libui_free(text);
 
 	// changing the text might necessitate a change in the button's size
 	uiWindowsControlMinimumSizeChanged(uiWindowsControl(b));
@@ -124,5 +124,5 @@ uiFontButton *uiNewFontButton(void)
 
 void uiFreeFontButtonFont(uiFontDescriptor *desc)
 {
-	uiprivFree((char *) (desc->Family));
+	libui_free((char *) (desc->Family));
 }

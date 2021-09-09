@@ -28,7 +28,7 @@ HRESULT uiprivTableGetMetrics(uiTable *t, int iItem, int iSubItem, uiprivTableMe
 	if (mout == NULL)
 		return E_POINTER;
 
-	m = uiprivNew(uiprivTableMetrics);
+	m = libui_new_t(uiprivTableMetrics);
 
 	p = (*(t->columns))[iSubItem];
 	m->hasText = p->textModelColumn != -1;
@@ -99,7 +99,7 @@ HRESULT uiprivTableGetMetrics(uiTable *t, int iItem, int iSubItem, uiprivTableMe
 	*mout = m;
 	return S_OK;
 fail:
-	uiprivFree(m);
+	libui_free(m);
 	*mout = NULL;
 	return hr;
 }

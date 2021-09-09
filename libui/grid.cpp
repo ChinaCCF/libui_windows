@@ -418,7 +418,7 @@ static void uiGridDestroy(uiControl *c)
 	for (struct gridChild *gc : *(g->children)) {
 		uiControlSetParent(gc->c, NULL);
 		uiControlDestroy(gc->c);
-		uiprivFree(gc);
+		libui_free(gc);
 	}
 	delete g->indexof;
 	delete g->children;
@@ -565,7 +565,7 @@ static struct gridChild *toChild(uiControl *c, int xspan, int yspan, int hexpand
 		uiprivUserBug("You cannot have a negative xspan in a uiGrid cell.");
 	if (yspan < 0)
 		uiprivUserBug("You cannot have a negative yspan in a uiGrid cell.");
-	gc = uiprivNew(struct gridChild);
+	gc = libui_new_t(struct gridChild);
 	gc->c = c;
 	gc->xspan = xspan;
 	gc->yspan = yspan;

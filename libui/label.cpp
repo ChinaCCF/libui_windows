@@ -51,7 +51,7 @@ uiLabel *uiNewLabel(const char *text)
 		SS_LEFTNOWORDWRAP | SS_NOPREFIX,
 		hInstance, NULL,
 		TRUE);
-	uiprivFree(wtext);
+	libui_free(wtext);
 
 	return l;
 }

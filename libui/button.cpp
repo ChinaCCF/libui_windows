@@ -95,7 +95,7 @@ uiButton *uiNewButton(const char *text)
 		BS_PUSHBUTTON | WS_TABSTOP,
 		hInstance, NULL,
 		TRUE);
-	uiprivFree(wtext);
+	libui_free(wtext);
 
 	uiWindowsRegisterWM_COMMANDHandler(b->hwnd, onWM_COMMAND, uiControl(b));
 	uiButtonOnClicked(b, defaultOnClicked, NULL);

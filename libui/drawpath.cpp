@@ -17,7 +17,7 @@ uiDrawPath *uiDrawNewPath(uiDrawFillMode fillmode)
 	uiDrawPath *p;
 	HRESULT hr;
 
-	p = uiprivNew(uiDrawPath);
+	p = libui_new_t(uiDrawPath);
 	hr = d2dfactory->CreatePathGeometry(&(p->path));
 	if (hr != S_OK)
 		logHRESULT(L"error creating path", hr);
@@ -43,7 +43,7 @@ void uiDrawFreePath(uiDrawPath *p)
 		// TODO close sink first?
 		p->sink->Release();
 	p->path->Release();
-	uiprivFree(p);
+	libui_free(p);
 }
 
 void uiDrawPathNewFigure(uiDrawPath *p, double x, double y)

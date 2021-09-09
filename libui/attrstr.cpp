@@ -269,7 +269,7 @@ static void addBackgroundParams(struct foreachParams *p, size_t start, size_t en
 {
 	struct drawTextBackgroundParams *params;
 
-	params = uiprivNew(struct drawTextBackgroundParams);
+	params = libui_new_t(struct drawTextBackgroundParams);
 	params->start = start;
 	params->end = end;
 	uiAttributeColor(attr, &(params->r), &(params->g), &(params->b), &(params->a));
@@ -295,7 +295,7 @@ static uiForEach processAttribute(const uiAttributedString *s, const uiAttribute
 		hr = p->layout->SetFontFamilyName(wfamily, range);
 		if (hr != S_OK)
 			logHRESULT(L"error applying family name attribute", hr);
-		uiprivFree(wfamily);
+		libui_free(wfamily);
 		break;
 	case uiAttributeTypeSize:
 		hr = p->layout->SetFontSize(

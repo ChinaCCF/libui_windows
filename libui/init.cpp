@@ -28,11 +28,11 @@ static const char *initerr(const char *message, const WCHAR *label, DWORD value)
 		wmessage,
 		value, value,
 		sysmsg);
-	uiprivFree(wmessage);
+	libui_free(wmessage);
 	if (hassysmsg)
 		LocalFree(sysmsg);		// ignore error
 	out = toUTF8(wout);
-	uiprivFree(wout);
+	libui_free(wout);
 	return out + 1;
 }
 
@@ -64,7 +64,7 @@ const char *uiInit(uiInitOptions *o)
 
 	uiprivOptions = *o;
 
-	initAlloc();
+	init_Alloc();
 
 	nCmdShow = SW_SHOWDEFAULT;
 	GetStartupInfoW(&si);
@@ -91,6 +91,7 @@ const char *uiInit(uiInitOptions *o)
 	ncm.cbSize = sizeof (NONCLIENTMETRICSW);
 	if (SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof (NONCLIENTMETRICSW), &ncm, sizeof (NONCLIENTMETRICSW)) == 0)
 		return ieLastErr("getting default fonts");
+
 	hMessageFont = CreateFontIndirectW(&(ncm.lfMessageFont));
 	if (hMessageFont == NULL)
 		return ieLastErr("loading default messagebox font; this is the default UI font");
@@ -157,13 +158,13 @@ void uiUninit(void)
 	unregisterWindowClass();
 	// no need to delete the default icon or cursor; see http://stackoverflow.com/questions/30603077/
 	uninitUtilWindow();
-	uninitAlloc();
+	uninit_Alloc();
 }
 
 void uiFreeInitError(const char *err)
 {
 	if (*(err - 1) == '-')
-		uiprivFree((void *) (err - 1));
+		libui_free((void *) (err - 1));
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)

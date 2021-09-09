@@ -24,27 +24,27 @@ uiOpenTypeFeatures *uiNewOpenTypeFeatures(void)
 {
 	uiOpenTypeFeatures *otf;
 
-	otf = uiprivNew(uiOpenTypeFeatures);
+	otf = libui_new_t(uiOpenTypeFeatures);
 	otf->cap = 16;
-	otf->data = (struct feature *) uiprivAlloc(bytecount(otf->cap), "struct feature[]");
+	otf->data = (struct feature *) libui_alloc(bytecount(otf->cap), "struct feature[]");
 	otf->len = 0;
 	return otf;
 }
 
 void uiFreeOpenTypeFeatures(uiOpenTypeFeatures *otf)
 {
-	uiprivFree(otf->data);
-	uiprivFree(otf);
+	libui_free(otf->data);
+	libui_free(otf);
 }
 
 uiOpenTypeFeatures *uiOpenTypeFeaturesClone(const uiOpenTypeFeatures *otf)
 {
 	uiOpenTypeFeatures *ret;
 
-	ret = uiprivNew(uiOpenTypeFeatures);
+	ret = libui_new_t(uiOpenTypeFeatures);
 	ret->len = otf->len;
 	ret->cap = otf->cap;
-	ret->data = (struct feature *) uiprivAlloc(bytecount(ret->cap), "struct feature[]");
+	ret->data = (struct feature *) libui_alloc(bytecount(ret->cap), "struct feature[]");
 	memset(ret->data, 0, bytecount(ret->cap));
 	memmove(ret->data, otf->data, bytecount(ret->len));
 	return ret;
@@ -95,7 +95,7 @@ void uiOpenTypeFeaturesAdd(uiOpenTypeFeatures *otf, char a, char b, char c, char
 	// if we got here, the tag is new
 	if (otf->len == otf->cap) {
 		otf->cap *= 2;
-		otf->data = (struct feature *) uiprivRealloc(otf->data, bytecount(otf->cap), "struct feature[]");
+		otf->data = (struct feature *) libui_realloc(otf->data, bytecount(otf->cap), "struct feature[]");
 	}
 	f = otf->data + otf->len;
 	f->a = a;

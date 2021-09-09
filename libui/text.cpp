@@ -10,7 +10,7 @@ WCHAR *windowTextAndLen(HWND hwnd, LRESULT *len)
 	if (len != NULL)
 		*len = n;
 	// WM_GETTEXTLENGTH does not include the null terminator
-	text = (WCHAR *) uiprivAlloc((n + 1) * sizeof (WCHAR), "WCHAR[]");
+	text = (WCHAR *) libui_alloc((n + 1) * sizeof (WCHAR), "WCHAR[]");
 	// note the comparison: the size includes the null terminator, but the return does not
 	if (GetWindowTextW(hwnd, text, n + 1) != n) {
 		logLastError(L"error getting window text");
@@ -35,7 +35,7 @@ void setWindowText(HWND hwnd, WCHAR *wtext)
 
 void uiFreeText(char *text)
 {
-	uiprivFree(text);
+	libui_free(text);
 }
 
 int uiWindowsWindowTextWidth(HWND hwnd)
@@ -78,11 +78,11 @@ int uiWindowsWindowTextWidth(HWND hwnd)
 	if (ReleaseDC(hwnd, dc) == 0)
 		logLastError(L"error releasing DC");
 
-	uiprivFree(text);
+	libui_free(text);
 	return size.cx;
 
 noTextOrError:
-	uiprivFree(text);
+	libui_free(text);
 	return 0;
 }
 
@@ -93,7 +93,7 @@ char *uiWindowsWindowText(HWND hwnd)
 
 	wtext = windowText(hwnd);
 	text = toUTF8(wtext);
-	uiprivFree(wtext);
+	libui_free(wtext);
 	return text;
 }
 
@@ -103,7 +103,7 @@ void uiWindowsSetWindowText(HWND hwnd, const char *text)
 
 	wtext = toUTF16(text);
 	setWindowText(hwnd, wtext);
-	uiprivFree(wtext);
+	libui_free(wtext);
 }
 
 int uiprivStricmp(const char *a, const char *b)
@@ -114,7 +114,7 @@ int uiprivStricmp(const char *a, const char *b)
 	wa = toUTF16(a);
 	wb = toUTF16(b);
 	ret = _wcsicmp(wa, wb);
-	uiprivFree(wb);
-	uiprivFree(wa);
+	libui_free(wb);
+	libui_free(wa);
 	return ret;
 }

@@ -27,7 +27,7 @@ uiImage *uiNewImage(double width, double height)
 {
 	uiImage *i;
 
-	i = uiprivNew(uiImage);
+	i = libui_new_t(uiImage);
 	i->width = width;
 	i->height = height;
 	i->bitmaps = new std::vector<IWICBitmap *>;
@@ -39,7 +39,7 @@ void uiFreeImage(uiImage *i)
 	for (IWICBitmap *b : *(i->bitmaps))
 		b->Release();
 	delete i->bitmaps;
-	uiprivFree(i);
+	libui_free(i);
 }
 
 // to make things easier, we store images in WIC in the same way we store them in GDI (as system-endian ARGB) and premultiplied (as that's what AlphaBlend() expects (TODO confirm this))

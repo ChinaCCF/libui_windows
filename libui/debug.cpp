@@ -26,7 +26,7 @@ HRESULT _logLastError(debugargs, const WCHAR *s)
 	if (useFormatted)
 		LocalFree(formatted);		// ignore error
 	printDebug(msg);
-	uiprivFree(msg);
+	libui_free(msg);
 	DebugBreak();
 
 	SetLastError(le);
@@ -53,7 +53,7 @@ HRESULT _logHRESULT(debugargs, const WCHAR *s, HRESULT hr)
 	if (useFormatted)
 		LocalFree(formatted);		// ignore error
 	printDebug(msg);
-	uiprivFree(msg);
+	libui_free(msg);
 	DebugBreak();
 
 	return hr;
@@ -71,14 +71,14 @@ void uiprivRealBug(const char *file, const char *line, const char *func, const c
 	va_end(ap2);
 	n++;		// terminating '\0'
 
-	msg = (char *) uiprivAlloc(n * sizeof (char), "char[]");
+	msg = (char *) libui_alloc(n * sizeof (char), "char[]");
 	// includes terminating '\0' according to example in https://msdn.microsoft.com/en-us/library/xa1a1a6z.aspx
 	vsprintf_s(msg, n, format, ap);
 
 	final = strf(L"[libui] %hs:%hs:%hs() %hs%hs\n", file, line, func, prefix, msg);
-	uiprivFree(msg);
+	libui_free(msg);
 	printDebug(final);
-	uiprivFree(final);
+	libui_free(final);
 
 	DebugBreak();
 }

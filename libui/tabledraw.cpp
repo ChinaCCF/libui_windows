@@ -252,11 +252,11 @@ static HRESULT drawTextPart(HRESULT hr, struct drawState *s)
 	// draw examples on the web, etc.
 	// TODO find the real correct flags
 	if (DrawTextW(s->dc, wstr, -1, &(s->m->realTextRect), DT_LEFT | DT_VCENTER | DT_END_ELLIPSIS | DT_SINGLELINE | DT_NOPREFIX | DT_EDITCONTROL) == 0) {
-		uiprivFree(wstr);
+		libui_free(wstr);
 		logLastError(L"DrawTextW()");
 		return E_FAIL;
 	}
-	uiprivFree(wstr);
+	libui_free(wstr);
 
 	// TODO decide once and for all what to compare to here and with SelectObject()
 	if (SetBkMode(s->dc, prevMode) != TRANSPARENT) {
@@ -476,7 +476,7 @@ fail:
 	// TODO check errors
 	if (theme != NULL)
 		CloseThemeData(theme);
-	uiprivFree(wstr);
+	libui_free(wstr);
 	return hr;
 }
 
@@ -486,7 +486,7 @@ static HRESULT freeDrawState(struct drawState *s)
 
 	hrret = S_OK;
 	if (s->m != NULL) {
-		uiprivFree(s->m);
+		libui_free(s->m);
 		s->m = NULL;
 	}
 	if (s->freeTextBrush) {

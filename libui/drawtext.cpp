@@ -38,7 +38,7 @@ uiDrawTextLayout *uiDrawNewTextLayout(uiDrawTextLayoutParams *p)
 	FLOAT maxWidth;
 	HRESULT hr;
 
-	tl = uiprivNew(uiDrawTextLayout);
+	tl = libui_new_t(uiDrawTextLayout);
 
 	wDefaultFamily = toUTF16(p->DefaultFont->Family);
 	hr = dwfactory->CreateTextFormat(
@@ -51,7 +51,7 @@ uiDrawTextLayout *uiDrawNewTextLayout(uiDrawTextLayoutParams *p)
 		// TODO use the current locale?
 		L"",
 		&(tl->format));
-	uiprivFree(wDefaultFamily);
+	libui_free(wDefaultFamily);
 	if (hr != S_OK)
 		logHRESULT(L"error creating IDWriteTextFormat", hr);
 	hr = tl->format->SetTextAlignment(dwriteAligns[p->Align]);
@@ -95,14 +95,14 @@ uiDrawTextLayout *uiDrawNewTextLayout(uiDrawTextLayoutParams *p)
 
 void uiDrawFreeTextLayout(uiDrawTextLayout *tl)
 {
-	uiprivFree(tl->u16tou8);
-	uiprivFree(tl->u8tou16);
+	libui_free(tl->u16tou8);
+	libui_free(tl->u8tou16);
 	for (auto p : *(tl->backgroundParams))
-		uiprivFree(p);
+		libui_free(p);
 	delete tl->backgroundParams;
 	tl->layout->Release();
 	tl->format->Release();
-	uiprivFree(tl);
+	libui_free(tl);
 }
 
 // TODO make this shared code somehow

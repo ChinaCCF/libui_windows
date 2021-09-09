@@ -266,7 +266,7 @@ void uiFormAppend(uiForm *f, const char *label, uiControl *c, int stretchy)
 		SS_LEFT | SS_NOPREFIX,
 		hInstance, NULL,
 		TRUE);
-	uiprivFree(wlabel);
+	libui_free(wlabel);
 	uiWindowsEnsureSetParentHWND(fc.label, f->hwnd);
 	fc.stretchy = stretchy;
 	uiControlSetParent(fc.c, uiControl(f));

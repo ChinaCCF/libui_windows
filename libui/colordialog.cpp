@@ -228,7 +228,7 @@ static void updateDouble(HWND hwnd, double d, HWND whichChanged)
 		return;
 	str = ftoutf16(d);
 	setWindowText(hwnd, str);
-	uiprivFree(str);
+	libui_free(str);
 }
 
 static void updateDialog(struct colorDialog *c, HWND whichChanged)
@@ -259,22 +259,22 @@ static void updateDialog(struct colorDialog *c, HWND whichChanged)
 	if (whichChanged != c->editRInt) {
 		str = itoutf16(rb);
 		setWindowText(c->editRInt, str);
-		uiprivFree(str);
+		libui_free(str);
 	}
 	if (whichChanged != c->editGInt) {
 		str = itoutf16(gb);
 		setWindowText(c->editGInt, str);
-		uiprivFree(str);
+		libui_free(str);
 	}
 	if (whichChanged != c->editBInt) {
 		str = itoutf16(bb);
 		setWindowText(c->editBInt, str);
-		uiprivFree(str);
+		libui_free(str);
 	}
 	if (whichChanged != c->editAInt) {
 		str = itoutf16(ab);
 		setWindowText(c->editAInt, str);
-		uiprivFree(str);
+		libui_free(str);
 	}
 
 	if (whichChanged != c->editHex) {
@@ -956,7 +956,7 @@ static struct colorDialog *beginColorDialog(HWND hwnd, LPARAM lParam)
 {
 	struct colorDialog *c;
 
-	c = uiprivNew(struct colorDialog);
+	c = libui_new_t(struct colorDialog);
 	c->hwnd = hwnd;
 	c->out = (struct colorDialogRGBA *) lParam;
 	// load initial values now
@@ -995,7 +995,7 @@ static void endColorDialog(struct colorDialog *c, INT_PTR code)
 {
 	if (EndDialog(c->hwnd, code) == 0)
 		logLastError(L"error ending color dialog");
-	uiprivFree(c);
+	libui_free(c);
 }
 
 // TODO make this void on the font dialog too
@@ -1020,7 +1020,7 @@ static double editDouble(HWND hwnd)
 
 	s = windowText(hwnd);
 	d = _wtof(s);
-	uiprivFree(s);
+	libui_free(s);
 	return d;
 }
 
@@ -1111,7 +1111,7 @@ static int editInt(HWND hwnd)
 
 	s = windowText(hwnd);
 	i = _wtoi(s);
-	uiprivFree(s);
+	libui_free(s);
 	return i;
 }
 
@@ -1176,7 +1176,7 @@ static void hexChanged(struct colorDialog *c)
 
 	buf = windowText(c->editHex);
 	is = hex2RGBA(buf, &r, &g, &b, &a);
-	uiprivFree(buf);
+	libui_free(buf);
 	if (!is)
 		return;
 	rgb2HSV(r, g, b, &(c->h), &(c->s), &(c->v));

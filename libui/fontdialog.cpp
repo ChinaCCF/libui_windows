@@ -121,7 +121,7 @@ static WCHAR *cbGetItemText(HWND cb, WPARAM item)
 	len = SendMessageW(cb, CB_GETLBTEXTLEN, item, 0);
 	if (len == (LRESULT) CB_ERR)
 		logLastError(L"error getting item text length from combobox");
-	text = (WCHAR *) uiprivAlloc((len + 1) * sizeof (WCHAR), "WCHAR[]");
+	text = (WCHAR *) libui_alloc((len + 1) * sizeof (WCHAR), "WCHAR[]");
 	if (SendMessageW(cb, CB_GETLBTEXT, item, (LPARAM) text) != len)
 		logLastError(L"error getting item text from combobox");
 	return text;
@@ -138,7 +138,7 @@ static BOOL cbTypeToSelect(HWND cb, LRESULT *posOut, BOOL restoreAfter)
 	text = windowText(cb);
 	pos = SendMessageW(cb, CB_FINDSTRINGEXACT, (WPARAM) (-1), (LPARAM) text);
 	if (pos == (LRESULT) CB_ERR) {
-		uiprivFree(text);
+		libui_free(text);
 		return FALSE;
 	}
 	cbSetCurSel(cb, (WPARAM) pos);
@@ -147,7 +147,7 @@ static BOOL cbTypeToSelect(HWND cb, LRESULT *posOut, BOOL restoreAfter)
 	if (restoreAfter)
 		if (SendMessageW(cb, WM_SETTEXT, 0, (LPARAM) text) != (LRESULT) TRUE)
 			logLastError(L"error restoring old combobox text");
-	uiprivFree(text);
+	libui_free(text);
 	// and restore the selection like above
 	// TODO isn't there a 32-bit version of this
 	if (SendMessageW(cb, CB_SETEDITSEL, 0, MAKELPARAM(selStart, selEnd)) != (LRESULT) TRUE)
@@ -254,7 +254,7 @@ static void familyChanged(struct fontDialog *f)
 			logHRESULT(L"error getting font for filling styles box", hr);
 		label = fontStyleName(f->fc, font);
 		pos = cbAddString(f->styleCombobox, label);
-		uiprivFree(label);
+		libui_free(label);
 		cbSetItemData(f->styleCombobox, (WPARAM) pos, (LPARAM) font);
 		if (font->GetWeight() == weight &&
 			font->GetStyle() == style &&
@@ -386,7 +386,7 @@ static void fontDialogDrawSampleText(struct fontDialog *f, ID2D1RenderTarget *rt
 		&format);
 	if (hr != S_OK)
 		logHRESULT(L"error creating IDWriteTextFormat", hr);
-	uiprivFree(family);
+	libui_free(family);
 
 	rect.left = 0;
 	rect.top = 0;
@@ -402,7 +402,7 @@ static void fontDialogDrawSampleText(struct fontDialog *f, ID2D1RenderTarget *rt
 
 	format->Release();
 	if (exists)
-		uiprivFree(sample);
+		libui_free(sample);
 	black->Release();
 }
 
@@ -466,7 +466,7 @@ static struct fontDialog *beginFontDialog(HWND hwnd, LPARAM lParam)
 	HWND samplePlacement;
 	HRESULT hr;
 
-	f = uiprivNew(struct fontDialog);
+	f = libui_new_t(struct fontDialog);
 	f->hwnd = hwnd;
 	f->params = (struct fontDialogParams *) lParam;
 
@@ -482,7 +482,7 @@ static struct fontDialog *beginFontDialog(HWND hwnd, LPARAM lParam)
 			logHRESULT(L"error getting font family", hr);
 		wname = uiprivFontCollectionFamilyName(f->fc, family);
 		pos = cbAddString(f->familyCombobox, wname);
-		uiprivFree(wname);
+		libui_free(wname);
 		cbSetItemData(f->familyCombobox, (WPARAM) pos, (LPARAM) family);
 	}
 
@@ -506,7 +506,7 @@ static void endFontDialog(struct fontDialog *f, INT_PTR code)
 	uiprivFontCollectionFree(f->fc);
 	if (EndDialog(f->hwnd, code) == 0)
 		logLastError(L"error ending font dialog");
-	uiprivFree(f);
+	libui_free(f);
 }
 
 static INT_PTR tryFinishDialog(struct fontDialog *f, WPARAM wParam)
@@ -769,8 +769,8 @@ void uiprivLoadInitialFontDialogParams(struct fontDialogParams *params)
 void uiprivDestroyFontDialogParams(struct fontDialogParams *params)
 {
 	params->font->Release();
-	uiprivFree(params->familyName);
-	uiprivFree(params->styleName);
+	libui_free(params->familyName);
+	libui_free(params->styleName);
 }
 
 WCHAR *uiprivFontDialogParamsToString(struct fontDialogParams *params)
@@ -778,7 +778,7 @@ WCHAR *uiprivFontDialogParamsToString(struct fontDialogParams *params)
 	WCHAR *text;
 
 	// TODO dynamically allocate
-	text = (WCHAR *) uiprivAlloc(512 * sizeof (WCHAR), "WCHAR[]");
+	text = (WCHAR *) libui_alloc(512 * sizeof (WCHAR), "WCHAR[]");
 	_snwprintf(text, 512, L"%s %s %g",
 		params->familyName,
 		params->styleName,

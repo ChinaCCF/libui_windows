@@ -76,7 +76,7 @@ void uiMultilineEntrySetText(uiMultilineEntry *e, const char *text)
 	e->inhibitChanged = TRUE;
 	crlf = LFtoCRLF(text);
 	uiWindowsSetWindowText(e->hwnd, crlf);
-	uiprivFree(crlf);
+	libui_free(crlf);
 	e->inhibitChanged = FALSE;
 	// don't queue the control for resize; entry sizes are independent of their contents
 }
@@ -95,9 +95,9 @@ void uiMultilineEntryAppend(uiMultilineEntry *e, const char *text)
 	SendMessageW(e->hwnd, EM_SETSEL, n, n);
 	crlf = LFtoCRLF(text);
 	wtext = toUTF16(crlf);
-	uiprivFree(crlf);
+	libui_free(crlf);
 	SendMessageW(e->hwnd, EM_REPLACESEL, FALSE, (LPARAM) wtext);
-	uiprivFree(wtext);
+	libui_free(wtext);
 	e->inhibitChanged = FALSE;
 }
 

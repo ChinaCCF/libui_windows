@@ -131,7 +131,7 @@ static struct attr *attrDelete(uiprivAttrList *alist, struct attr *a)
 
 	next = attrUnlink(alist, a);
 	uiprivAttributeRelease(a->val);
-	uiprivFree(a);
+	libui_free(a);
 	return next;
 }
 
@@ -179,7 +179,7 @@ static struct attr *attrDropRange(uiprivAttrList *alist, struct attr *a, size_t 
 	}
 
 	// we'll need to split the attribute into two
-	b = uiprivNew(struct attr);
+	b = libui_new_t(struct attr);
 	b->val = uiprivAttributeRetain(a->val);
 	b->start = end;
 	b->end = a->end;
@@ -223,7 +223,7 @@ static struct attr *attrSplitAt(uiprivAttrList *alist, struct attr *a, size_t at
 	if (at >= a->end)
 		return NULL;
 
-	b = uiprivNew(struct attr);
+	b = libui_new_t(struct attr);
 	b->val = uiprivAttributeRetain(a->val);
 	b->start = at;
 	b->end = a->end;
@@ -289,7 +289,7 @@ static struct attr *attrDeleteRange(uiprivAttrList *alist, struct attr *a, size_
 
 uiprivAttrList *uiprivNewAttrList(void)
 {
-	return uiprivNew(uiprivAttrList);
+	return libui_new_t(uiprivAttrList);
 }
 
 void uiprivFreeAttrList(uiprivAttrList *alist)
@@ -300,10 +300,10 @@ void uiprivFreeAttrList(uiprivAttrList *alist)
 	while (a != NULL) {
 		next = a->next;
 		uiprivAttributeRelease(a->val);
-		uiprivFree(a);
+		libui_free(a);
 		a = next;
 	}
-	uiprivFree(alist);
+	libui_free(alist);
 }
 
 void uiprivAttrListInsertAttribute(uiprivAttrList *alist, uiAttribute *val, size_t start, size_t end)
@@ -353,7 +353,7 @@ void uiprivAttrListInsertAttribute(uiprivAttrList *alist, uiAttribute *val, size
 	}
 
 	// if we got here, we know we have to add the attribute before before
-	a = uiprivNew(struct attr);
+	a = libui_new_t(struct attr);
 	a->val = uiprivAttributeRetain(val);
 	a->start = start;
 	a->end = end;

@@ -115,10 +115,10 @@ static uiMenuItem *newItem(uiMenu *m, int type, const char *name)
 
 	if (m->len >= m->cap) {
 		m->cap += grow;
-		m->items = (uiMenuItem **) uiprivRealloc(m->items, m->cap * sizeof (uiMenuItem *), "uiMenuitem *[]");
+		m->items = (uiMenuItem **) libui_realloc(m->items, m->cap * sizeof (uiMenuItem *), "uiMenuitem *[]");
 	}
 
-	item = uiprivNew(uiMenuItem);
+	item = libui_new_t(uiMenuItem);
 
 	m->items[m->len] = item;
 	m->len++;
@@ -207,10 +207,10 @@ uiMenu *uiNewMenu(const char *name)
 		uiprivUserBug("You can not create a new menu after menus have been finalized.");
 	if (len >= cap) {
 		cap += grow;
-		menus = (uiMenu **) uiprivRealloc(menus, cap * sizeof (uiMenu *), "uiMenu *[]");
+		menus = (uiMenu **) libui_realloc(menus, cap * sizeof (uiMenu *), "uiMenu *[]");
 	}
 
-	m = uiprivNew(uiMenu);
+	m = libui_new_t(uiMenu);
 
 	menus[len] = m;
 	len++;
@@ -237,7 +237,7 @@ static void appendMenuItem(HMENU menu, uiMenuItem *item)
 
 	if (item->len >= item->cap) {
 		item->cap += grow;
-		item->hmenus = (HMENU *) uiprivRealloc(item->hmenus, item->cap * sizeof (HMENU), "HMENU[]");
+		item->hmenus = (HMENU *) libui_realloc(item->hmenus, item->cap * sizeof (HMENU), "HMENU[]");
 	}
 	item->hmenus[item->len] = menu;
 	item->len++;
@@ -348,22 +348,22 @@ void uninitMenus(void)
 
 	for (i = 0; i < len; i++) {
 		m = menus[i];
-		uiprivFree(m->name);
+		libui_free(m->name);
 		for (j = 0; j < m->len; j++) {
 			item = m->items[j];
 			if (item->len != 0)
 				// LONGTERM uiprivUserBug()?
 				uiprivImplBug("menu item %p (%ws) still has uiWindows attached; did you forget to destroy some windows?", item, item->name);
 			if (item->name != NULL)
-				uiprivFree(item->name);
+				libui_free(item->name);
 			if (item->hmenus != NULL)
-				uiprivFree(item->hmenus);
-			uiprivFree(item);
+				libui_free(item->hmenus);
+			libui_free(item);
 		}
 		if (m->items != NULL)
-			uiprivFree(m->items);
-		uiprivFree(m);
+			libui_free(m->items);
+		libui_free(m);
 	}
 	if (menus != NULL)
-		uiprivFree(menus);
+		libui_free(menus);
 }

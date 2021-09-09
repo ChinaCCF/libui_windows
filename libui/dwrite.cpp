@@ -23,7 +23,7 @@ fontCollection *uiprivLoadFontCollection(void)
 	fontCollection *fc;
 	HRESULT hr;
 
-	fc = uiprivNew(fontCollection);
+	fc = libui_new_t(fontCollection);
 	// always get the latest available font information
 	hr = dwfactory->GetSystemFontCollection(&(fc->fonts), TRUE);
 	if (hr != S_OK)
@@ -35,7 +35,7 @@ fontCollection *uiprivLoadFontCollection(void)
 void uiprivFontCollectionFree(fontCollection *fc)
 {
 	fc->fonts->Release();
-	uiprivFree(fc);
+	libui_free(fc);
 }
 
 WCHAR *uiprivFontCollectionFamilyName(fontCollection *fc, IDWriteFontFamily *family)
@@ -81,7 +81,7 @@ WCHAR *uiprivFontCollectionCorrectString(fontCollection *fc, IDWriteLocalizedStr
 	if (hr != S_OK)
 		logHRESULT(L"error getting length of font name", hr);
 	// GetStringLength() does not include the null terminator, but GetString() does
-	wname = (WCHAR *) uiprivAlloc((length + 1) * sizeof (WCHAR), "WCHAR[]");
+	wname = (WCHAR *) libui_alloc((length + 1) * sizeof (WCHAR), "WCHAR[]");
 	hr = names->GetString(index, wname, length + 1);
 	if (hr != S_OK)
 		logHRESULT(L"error getting font name", hr);

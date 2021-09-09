@@ -36,7 +36,7 @@ static HRESULT handleLVIF_TEXT(uiTable *t, NMLVDISPINFOW *nm, uiprivTableColumnP
 		// TODO make it so we don't have to make a copy; instead we can convert directly into pszText (this will also avoid the risk of having a dangling surrogate pair at the end)
 		wcsncpy(nm->item.pszText, wstr, nm->item.cchTextMax);
 		nm->item.pszText[nm->item.cchTextMax - 1] = L'\0';
-		uiprivFree(wstr);
+		libui_free(wstr);
 		return S_OK;
 	}
 
